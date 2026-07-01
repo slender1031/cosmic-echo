@@ -2,6 +2,8 @@ import { type NextRequest, NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth";
 import { upsertUser } from "@/lib/db/queries";
 
+export const runtime = 'edge';
+
 /**
  * GET /api/user/profile
  * Decrypts the x-eazo-session header and returns the authenticated user's profile.

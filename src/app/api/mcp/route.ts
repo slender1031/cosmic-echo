@@ -3,6 +3,8 @@ import { NextRequest } from "next/server";
 import { requireAuth } from "@/lib/auth";
 import { buildMcpServer } from "@/lib/mcp/server";
 
+export const runtime = 'edge';
+
 async function handleMcpRequest(request: NextRequest): Promise<Response> {
   const auth = requireAuth(request);
   if (!auth.ok) return auth.response;

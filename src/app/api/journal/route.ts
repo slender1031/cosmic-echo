@@ -1,5 +1,7 @@
 import { requireAuth } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
+
+export const runtime = 'edge';
 import {
   getEntryByDate,
   getEntryById,

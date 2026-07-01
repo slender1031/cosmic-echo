@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTodayAstrology, ASTROLOGY_ICONS } from "@/lib/tarot-data";
+
+export const runtime = 'edge';
 import { getTodayDateInfo } from "@/lib/lunar";
 
 // Public endpoint — no auth required for today's astrology tag

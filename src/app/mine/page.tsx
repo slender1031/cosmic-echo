@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+
+export const runtime = 'edge';
 import { useTranslation } from "react-i18next";
 import { useDemo } from "@/components/demo/demo-provider";
 import { motion } from "framer-motion";

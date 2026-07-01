@@ -1,6 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth";
 
+export const runtime = 'edge';
+
 /**
  * Notifications are not supported on Cloudflare Pages (Eazo SDK removed).
  * This route is kept as a no-op for API compatibility.

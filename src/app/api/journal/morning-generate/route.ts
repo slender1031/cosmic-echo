@@ -1,6 +1,8 @@
 import { requireAuth } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { getCardById } from "@/lib/tarot-data";
+
+export const runtime = 'edge';
 import { getLenormandCardById } from "@/lib/lenormand-data";
 import { DEMO_MODE, generateDemoMorning } from "@/lib/demo";
 import { callAI } from "@/lib/ai";

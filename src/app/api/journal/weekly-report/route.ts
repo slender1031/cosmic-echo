@@ -1,6 +1,8 @@
 import { requireAuth } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { DEMO_MODE, generateDemoWeeklyReport } from "@/lib/demo";
+
+export const runtime = 'edge';
 import { callAI } from "@/lib/ai";
 
 interface JournalEntry {

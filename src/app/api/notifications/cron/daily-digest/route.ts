@@ -1,6 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth";
 
+export const runtime = 'edge';
+
 /**
  * Daily digest cron job.
  * Not supported on Cloudflare Pages (Eazo SDK removed).

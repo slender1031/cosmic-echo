@@ -1,6 +1,8 @@
 "use client";
 
 import { useParams } from "next/navigation";
+
+export const runtime = 'edge';
 import { CasesNewScreen } from "@/components/screens/CasesNewScreen";
 
 export default function CasesEditPage() {
