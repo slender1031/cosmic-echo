@@ -1,0 +1,39 @@
+{
+  "entries": [
+    {
+      "id": "qx_wgejkj3ZFuM7P-7Y8o",
+      "userId": "demo-user",
+      "date": "2026-07-01",
+      "cardId": "seven-cups",
+      "cardName": "圣杯七",
+      "cardOrientation": "upright",
+      "cards": [
+        {
+          "cardId": "seven-cups",
+          "cardName": "圣杯七",
+          "cardOrientation": "upright"
+        }
+      ],
+      "cardSystem": "tarot",
+      "astrologyTag": "太阳入双子",
+      "astrologyDescription": "思路活跃，适合沟通、连接与吸收新信息。",
+      "morningTheme": "满月的光也在照见需要释放的东西",
+      "morningQuestion": "有什么不再属于你，是时候放手了？",
+      "morningQuestionDescription": "腾出双手才能接住新的到来，\n放手不是失去而是一种清理。",
+      "journalText": "今天努力追求喜欢的女孩",
+      "eveningSummary": "你写下的\"今天努力追求喜欢的女孩\"和\"满月的光也在照见需要释放的东西\"形成了对应，能看见你今天是怎么把感受推进行动里的。",
+      "behaviorPatterns": "[\"表达\",\"节奏\"]",
+      "patternMapping": "这段记录说明，你不是停留在理解课题，而是在具体情境里练习它，尤其体现在\"今天努力追求喜欢的女孩\"这一处。",
+      "eveningEcho": "不必急着完成，允许过程本身也是答案。",
+      "isComplete": true,
+      "morningDrawnAt": "2026-07-01T10:50:42.588Z",
+      "streakDay": 1,
+      "updatedAt": "2026-07-01T10:50:53.973Z",
+      "stabilityDelta": 1,
+      "explorationDelta": 2,
+      "introspectionDelta": -4,
+      "actionDelta": 1,
+      "journalSubmittedAt": "2026-07-01T10:50:53.973Z"
+    }
+  ]
+}

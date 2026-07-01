@@ -1,0 +1,254 @@
+{
+  "app": {
+    "name": "Cosmic Echo Journal",
+    "tagline": "Your personal behavior metaphor & reflection journal"
+  },
+  "nav": {
+    "morning": "Today",
+    "evening": "Journal",
+    "history": "History",
+    "forest": "Forest",
+    "cases": "Cases",
+    "mine": "Mine"
+  },
+  "morning": {
+    "greeting": "Good morning. Today's cosmic echo awaits.",
+    "drawCard": "Draw Today's Card",
+    "drawingCard": "Drawing…",
+    "cardDrawn": "Today's card drawn",
+    "astrology": "Astrology",
+    "cardNumber": "Card {{num}}",
+    "orientation": {
+      "upright": "Upright",
+      "reversed": "Reversed"
+    },
+    "lesson": "Today's Theme",
+    "question": "Reflection Question",
+    "generating": "Generating today's theme…",
+    "toEvening": "Write Evening Journal",
+    "alreadyDrawn": "Already drawn today",
+    "noEntry": "Tap above to draw your card",
+    "drawRandom": "Draw Random",
+    "pickManual": "Pick Manually",
+    "cardCount": "Cards",
+    "cardCountHint": "Choose your spread",
+    "drawCards": "Draw Cards",
+    "pickManualHint": "Tap cards. Upright or reversed will be decided by the cosmos."
+  },
+  "evening": {
+    "title": "Evening Journal",
+    "subtitle": "What happened today",
+    "placeholder": "Write about your feelings, what happened, inner movements… no structure needed, just honest notes.",
+    "submit": "Generate Today's Echo",
+    "submitting": "Generating echo…",
+    "echoTitle": "Today's Echo",
+    "patterns": "Behavior Patterns",
+    "mapping": "Connection to Theme",
+    "echo": "Echo",
+    "shareCard": "Generate Share Card",
+    "noMorning": "Complete today's morning theme first",
+    "alreadyDone": "Today's echo already generated"
+  },
+  "shareCard": {
+    "title": "Share Card",
+    "subtitle": "Turn today's insight into a beautiful card for someone you care about.",
+    "download": "Save Image",
+    "share": "Share",
+    "back": "Back"
+  },
+  "cases": {
+    "title": "Case Collection",
+    "subtitle": "Case Collection",
+    "comingSoon": "No cases yet",
+    "comingSoonDesc": "Tap the + button to record your first divination case",
+    "newTitle": "New Case",
+    "editTitle": "Edit Case",
+    "questionLabel": "Your Question",
+    "questionPlaceholder": "What do you want to explore through divination?",
+    "quickFill": "Quick fill",
+    "pickSpread": "Pick Spread",
+    "pickSpreadHint": "Tap to select",
+    "photoLabel": "Spread Photo",
+    "photoHint": "Upload a photo of your spread",
+    "change": "Change",
+    "clearAll": "Clear All",
+    "tapToPick": "Tap a position to pick a card",
+    "notesLabel": "Interpretation Notes",
+    "notesPlaceholder": "Record your intuition, feelings, or interpretation at the time…",
+    "reviewLabel": "Review Notes",
+    "reviewPlaceholder": "Looking back: did the event unfold? Was the prediction accurate? Any new insights?",
+    "resultLabel": "Result Verification",
+    "resultPending": "Pending",
+    "resultMatched": "Matched",
+    "resultUnmatched": "Not Matched",
+    "saveCase": "Save Case",
+    "updateCase": "Update Case",
+    "delete": "Delete",
+    "searchCard": "Search cards…",
+    "noMatch": "No matching cards found",
+    "stats": {
+      "total": "Total",
+      "monthlyNew": "This Month",
+      "verified": "Verified"
+    },
+    "searchPlaceholder": "Search questions or keywords…",
+    "filter": "Filter",
+    "tags": {
+      "all": "All",
+      "career": "Career",
+      "relationship": "Relationship",
+      "decision": "Decision",
+      "social": "Social",
+      "growth": "Growth",
+      "wealth": "Wealth"
+    },
+    "outcome": {
+      "yes": "Matched",
+      "pending": "Pending",
+      "no": "Not Matched"
+    },
+    "viewDetail": "View Details",
+    "addCase": "Add Case",
+    "editCase": "Edit Case"
+  },
+  "history": {
+    "title": "Reflection Journey",
+    "subtitle": "Look back on every day",
+    "streak": "Streak",
+    "streakDays": "{{count}} days",
+    "empty": "No entries yet. Start today.",
+    "complete": "Complete",
+    "partial": "Morning",
+    "viewEntry": "View"
+  },
+  "forest": {
+    "title": "Cosmic Forest",
+    "subtitle": "Cosmic Forest",
+    "treeInfo": "Tree Guide",
+    "currentStatus": "Current Structure Status",
+    "exploreType": "Exploration Growth Type",
+    "stageLabel": "Stage",
+    "statusDesc": "You are building new possibilities, gradually exploring and understanding your true self.",
+    "treeOverview": "Tree Structure Overview",
+    "updatedAt": "Updated {{date}}",
+    "stability": "Stability",
+    "exploration": "Exploration",
+    "introspection": "Introspection",
+    "action": "Action",
+    "levelUp": "Mid-High",
+    "levelHigh": "High",
+    "levelMid": "Mid-High",
+    "levelMed": "Medium",
+    "trendUp": "↑ {{num}}",
+    "trendDown": "↓ {{num}}",
+    "treeQuote": "Your tree is reaching outward — new branches represent new possibilities, while roots must dig deeper into your inner self.",
+    "growthTimeline": "Growth Timeline",
+    "timelineSubtitle": "Monthly updates",
+    "viewAll": "View All",
+    "thisMonth": "This Month",
+    "monthlyChanges": "Monthly Key Changes",
+    "rootDeepen": "Roots Deepening",
+    "rootDesc": "Inner stability is improving",
+    "branchStretch": "Branches Stretching",
+    "branchDesc": "Exploration continues to strengthen",
+    "energySediment": "Energy Settling",
+    "energyDesc": "Action energy fluctuating, maintain rhythm",
+    "weeklyCheckin": "Weekly Check-in",
+    "nextStage": "Next Stage",
+    "days": "days",
+    "unlockDesc": "Unlock \"Lush Branches\" — Flowers bloom in moonlight",
+    "stages": "Growth Stages",
+    "stage1": "Sprout Stage",
+    "stage2": "Exploration Stage",
+    "stage3": "Structure Formation Stage",
+    "stage4": "Stable Growth Stage",
+    "stage5": "Mature Stage",
+    "detail": {
+      "tabOverview": "Overview",
+      "tabStructure": "Structure Analysis",
+      "tabGrowth": "Growth Path",
+      "tabEnergy": "Tree Energy",
+      "monthlyAnalysis": "Monthly Structure Analysis",
+      "analysisDate": "{{start}} – {{end}}",
+      "analysisDesc": "Based on weekly and monthly report structure model updates",
+      "structureTrend": "Structure Change Trend",
+      "treeFormChange": "Tree Form Change",
+      "lastMonth": "Last Month's You",
+      "thisMonthYou": "This Month's You",
+      "formChangeDesc": "Your tree is reaching out with new branches. Roots are also digging deeper inward.",
+      "nextStagePreview": "Next Stage Preview",
+      "previewStage": "Structure Building Phase (Stage {{stage}})",
+      "previewDesc": "As stability and introspection continue to improve, the tree will enter a more stable structure-building phase.",
+      "currentProgress": "Current Progress",
+      "monthlyQuote": "Monthly Tree Quote",
+      "monthlyQuoteText": "Growth doesn't happen overnight — it accumulates through every choice. Keep rooting inward, growing outward."
+    }
+  },
+  "common": {
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "loading": "Loading…",
+    "on": "On",
+    "off": "Off",
+    "close": "Close",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "userId": "User ID"
+  },
+  "language": {
+    "label": "Language",
+    "triggerLabel": "Language: {{language}}",
+    "followSystem": "System",
+    "followSystemWithLanguage": "System ({{language}})",
+    "enUS": "English",
+    "zhCN": "中文"
+  },
+  "errors": {
+    "notFound": {
+      "code": "404",
+      "title": "Page not found",
+      "description": "The page you're looking for doesn't exist or may have been moved.",
+      "backHome": "Back to home"
+    },
+    "generic": {
+      "title": "Something went wrong",
+      "description": "An unexpected error occurred. You can try again or return to the home page.",
+      "tryAgain": "Try again",
+      "backHome": "Back to home"
+    }
+  },
+  "starter": {
+    "badge": "Eazo App Starter",
+    "title": "Build your next app with Eazo",
+    "subtitle": "Demo artifacts are removed. You now have a clean foundation with auth, data access, and platform integrations ready for your product.",
+    "steps": {
+      "readDocs": {
+        "title": "Read the docs",
+        "desc": "Open AGENTS.md and README.md to understand the template architecture.",
+        "code": "AGENTS.md + README.md"
+      },
+      "replacePage": {
+        "title": "Replace this page",
+        "desc": "Move your product UI into src/components and keep page.tsx thin.",
+        "code": "src/app/page.tsx"
+      },
+      "firstFeature": {
+        "title": "Build your first feature",
+        "desc": "Add API routes under src/app/api and call them from typed helpers.",
+        "code": "src/app/api/*"
+      },
+      "translations": {
+        "title": "Add translations",
+        "desc": "Edit en-US / zh-CN strings in src/i18n/locales. LanguageSwitcher and I18nProvider in layout.tsx are already wired.",
+        "code": "src/i18n/locales/"
+      }
+    },
+    "nextCommand": {
+      "title": "Next command",
+      "desc": "Start developing and iterate in real time.",
+      "command": "bun dev"
+    }
+  }
+}

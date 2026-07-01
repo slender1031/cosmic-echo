@@ -1,0 +1,19 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "main": ".open-next/worker.js",
+  "name": "cosmic-echo",
+  "compatibility_date": "2026-07-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "vars": {
+    "NEXT_PUBLIC_DEMO_MODE": "true",
+    "NEXT_PUBLIC_APP_TITLE": "Cosmic Echo",
+    "NEXT_PUBLIC_APP_DESCRIPTION": "A gentle journaling companion with tarot insights"
+  },
+  "placement": {
+    "mode": "smart"
+  }
+}
