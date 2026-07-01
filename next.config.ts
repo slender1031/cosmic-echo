@@ -28,33 +28,39 @@ const nextConfig: NextConfig = {
     "172.30.*.*",
     "172.31.*.*",
   ],
-  webpack: (config, { nextRuntime }) => {
-    // Edge Runtime builds: replace Node.js-only packages with empty stubs.
-    // postgres and drizzle-orm use net/tls which don't exist in Edge.
-    if (nextRuntime === "edge") {
-      const stub = path.join(__dirname, "src/lib/db/empty-stub.cjs");
-      const pgStubPaths = [
-        "postgres",
-        "drizzle-orm",
-        "drizzle-orm/postgres-js",
-        "drizzle-orm/pg-core",
-        "drizzle-orm/mysql-core",
-        "drizzle-orm/sqlite-core",
-        "drizzle-orm/better-sqlite3",
-        "drizzle-orm/bun-sqlite",
-        "drizzle-orm/neon-serverless",
-        "drizzle-orm/singlestore",
-        "drizzle-orm/vercel-postgres",
-        "drizzle-orm/xata",
-        "drizzle-orm/lib",
-        "drizzle-orm/crosspostgres",
-        "drizzle-orm/pg-protocol",
-        "drizzle-orm/pg-vector",
-      ];
-      for (const pkg of pgStubPaths) {
-        config.resolve.alias[pkg] = stub;
-      }
+  webpack: (config, { nextRuntime, isServer }) => {
+    // Always log for debugging (check Cloudflare build logs)
+    console.log(
+      `[next.config.ts webpack] nextRuntime=${nextRuntime}, isServer=${isServer}`
+    );
+
+    // Edge Runtime OR client builds: replace Node.js-only packages with empty stubs.
+    // postgres and drizzle-orm/pg-core use net/tls which don't exist in Edge.
+    // We apply this for ALL builds (not just edge) to be safe, since demo mode
+    // never actually calls these packages at runtime.
+    const stub = path.join(__dirname, "src/lib/db/empty-stub.cjs");
+    const pgStubPaths = [
+      "postgres",
+      "drizzle-orm",
+      "drizzle-orm/postgres-js",
+      "drizzle-orm/pg-core",
+      "drizzle-orm/mysql-core",
+      "drizzle-orm/sqlite-core",
+      "drizzle-orm/better-sqlite3",
+      "drizzle-orm/bun-sqlite",
+      "drizzle-orm/neon-serverless",
+      "drizzle-orm/singlestore",
+      "drizzle-orm/vercel-postgres",
+      "drizzle-orm/xata",
+      "drizzle-orm/lib",
+      "drizzle-orm/crosspostgres",
+      "drizzle-orm/pg-protocol",
+      "drizzle-orm/pg-vector",
+    ];
+    for (const pkg of pgStubPaths) {
+      config.resolve.alias[pkg] = stub;
     }
+
     return config;
   },
 };
