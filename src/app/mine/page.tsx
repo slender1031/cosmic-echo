@@ -1,15 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import dynamic from "next/dynamic";
-import { Suspense } from "react";
+import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useDemo } from "@/components/demo/demo-provider";
-
-const MotionDiv = dynamic(
-  () => import("framer-motion").then(mod => ({ default: mod.motion.div })),
-  { ssr: false, loading: () => <div /> }
-);
 
 export const runtime = "edge";
 
@@ -68,7 +62,7 @@ export default function MinePage() {
         {/* 宇宙森林入口 */}
         <Link href="/forest" className="block">
           <div
-            className="rounded-[22px] border p-6 flex items-center gap-4 transition-shadow hover:shadow-md active:scale-[0.98] transition-transform duration-100"
+            className="rounded-[22px] border p-6 flex items-center gap-4 hover:shadow-md active:scale-[0.98] transition-transform duration-100"
             style={{ backgroundColor: "#fefdfe", borderColor: "#dbd5e8" }}
           >
             <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: "#eae5f3" }}>
