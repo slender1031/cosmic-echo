@@ -28,30 +28,17 @@ import {
   updateDemoEntry,
   listDemoEntries,
 } from "@/lib/demo";
-import * as fs from "fs";
-import * as path from "path";
+// Note: fs/path removed - not available in Cloudflare Edge Runtime
+// Demo store uses in-memory only on Cloudflare Pages
 
-const DEMO_STORE_FILE = path.join(process.cwd(), ".demo-store.json");
-
-/** Restore demo store from file on first request (survives dev server restarts) */
-let _demoStoreLoaded = false;
+/** No-op: demo store is in-memory only on Edge Runtime */
 function ensureDemoStoreLoaded() {
-  if (!DEMO_MODE || _demoStoreLoaded) return;
-  _demoStoreLoaded = true;
-  try {
-    if (fs.existsSync(DEMO_STORE_FILE)) {
-      const data = JSON.parse(fs.readFileSync(DEMO_STORE_FILE, "utf-8"));
-      restoreStoreSnapshot(data);
-    }
-  } catch { /* ignore */ }
+  // no-op for edge runtime
 }
 
-/** Persist demo store to file after mutations */
+/** No-op: demo store is in-memory only on Edge Runtime */
 function persistDemoStore() {
-  if (!DEMO_MODE) return;
-  try {
-    fs.writeFileSync(DEMO_STORE_FILE, JSON.stringify(getStoreSnapshot(), null, 2));
-  } catch { /* ignore */ }
+  // no-op for edge runtime
 }
 
 export async function GET(request: NextRequest) {
