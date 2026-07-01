@@ -1,7 +1,18 @@
-import { MorningScreen } from "@/components/screens/MorningScreen";
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
-export const runtime = 'edge';
+const MorningScreen = dynamic(() => import("@/components/screens/MorningScreen")), {
+  loading: () => <LoadingSpinner />,
+  ssr: false,
+});
+
+export const runtime = "edge";
 
 export default function Home() {
-  return <MorningScreen />;
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <MorningScreen />
+    </Suspense>
+  );
 }

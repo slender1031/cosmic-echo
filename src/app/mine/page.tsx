@@ -1,11 +1,17 @@
 "use client";
 
 import Link from "next/link";
-
-export const runtime = 'edge';
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import { useDemo } from "@/components/demo/demo-provider";
-import { motion } from "framer-motion";
+
+const MotionDiv = dynamic(
+  () => import("framer-motion").then(mod => ({ default: mod.motion.div })),
+  { ssr: false, loading: () => <div /> }
+);
+
+export const runtime = "edge";
 
 export default function MinePage() {
   const { t } = useTranslation();
@@ -14,7 +20,7 @@ export default function MinePage() {
 
   return (
     <div className="flex-1 overflow-y-auto">
-      <div className="absolute top-[-100px] left-[-100px] w-[300px] h-[300px] rounded-full pointer-events-none -z-10 opacity-10" 
+      <div className="absolute top-[-100px] left-[-100px] w-[300px] h-[300px] rounded-full pointer-events-none -z-10 opacity-10"
            style={{ background: "radial-gradient(#f8f6fc)", filter: "blur(80px)" }} />
 
       <div className="mx-auto max-w-lg px-7 pt-8 pb-18 space-y-6">
@@ -61,10 +67,8 @@ export default function MinePage() {
 
         {/* 宇宙森林入口 */}
         <Link href="/forest" className="block">
-          <motion.div
-            whileHover={{ y: -2 }}
-            whileTap={{ scale: 0.98 }}
-            className="rounded-[22px] border p-6 flex items-center gap-4 transition-shadow"
+          <div
+            className="rounded-[22px] border p-6 flex items-center gap-4 transition-shadow hover:shadow-md active:scale-[0.98] transition-transform duration-100"
             style={{ backgroundColor: "#fefdfe", borderColor: "#dbd5e8" }}
           >
             <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: "#eae5f3" }}>
@@ -86,7 +90,7 @@ export default function MinePage() {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9794a2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="9 18 15 12 9 6" />
             </svg>
-          </motion.div>
+          </div>
         </Link>
 
         {/* Settings Placeholder */}

@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { changeLocale, getLocalePreference, type LocalePreference } from "@/i18n";
 import { useEffect, useState } from "react";
@@ -73,33 +72,32 @@ export function BottomNav() {
             <Link
               key={tab.key}
               href={tab.href}
+              prefetch={true}
               onClick={() => {
-                // Dispatch custom event to notify screens to refresh
                 if (typeof window !== "undefined") {
                   window.dispatchEvent(new CustomEvent("cosmic-echo:tab-change", { detail: { tab: tab.key } }));
                 }
               }}
               className="flex flex-col items-center gap-1 min-w-[56px] min-h-[44px] justify-center relative"
+              style={{ WebkitTapHighlightColor: "transparent" }}
             >
-              <motion.div
-                whileTap={{ scale: 0.85 }}
+              <div
+                className="transition-transform duration-100 active:scale-90"
                 style={{ color: isActive ? "#7e63c9" : "#9794a2" }}
-                className="transition-colors duration-150"
               >
                 {tab.icon}
-              </motion.div>
+              </div>
               <span
                 className="text-[10px] font-semibold tracking-wider transition-colors duration-150"
                 style={{ color: isActive ? "#7e63c9" : "#9794a2" }}
               >
                 {t(`nav.${tab.key}`)}
               </span>
+              {/* Active indicator: CSS-only, no layout animation */}
               {isActive && (
-                <motion.div
-                  layoutId="nav-indicator"
+                <div
                   className="absolute -top-px left-3 right-3 h-0.5 rounded-full"
                   style={{ backgroundColor: "#7e63c9" }}
-                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
                 />
               )}
             </Link>
@@ -150,6 +148,7 @@ export function SideNav() {
             <Link
               key={tab.key}
               href={tab.href}
+              prefetch={true}
               className="flex items-center gap-3 px-4 py-3 rounded-xl transition-colors duration-150"
               style={{
                 backgroundColor: isActive ? "#eae5f3" : "transparent",
