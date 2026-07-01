@@ -33,9 +33,27 @@ const nextConfig: NextConfig = {
     // postgres and drizzle-orm use net/tls which don't exist in Edge.
     if (nextRuntime === "edge") {
       const stub = path.join(__dirname, "src/lib/db/empty-stub.cjs");
-      config.resolve.alias["postgres"] = stub;
-      config.resolve.alias["drizzle-orm"] = stub;
-      config.resolve.alias["drizzle-orm/postgres-js"] = stub;
+      const pgStubPaths = [
+        "postgres",
+        "drizzle-orm",
+        "drizzle-orm/postgres-js",
+        "drizzle-orm/pg-core",
+        "drizzle-orm/mysql-core",
+        "drizzle-orm/sqlite-core",
+        "drizzle-orm/better-sqlite3",
+        "drizzle-orm/bun-sqlite",
+        "drizzle-orm/neon-serverless",
+        "drizzle-orm/singlestore",
+        "drizzle-orm/vercel-postgres",
+        "drizzle-orm/xata",
+        "drizzle-orm/lib",
+        "drizzle-orm/crosspostgres",
+        "drizzle-orm/pg-protocol",
+        "drizzle-orm/pg-vector",
+      ];
+      for (const pkg of pgStubPaths) {
+        config.resolve.alias[pkg] = stub;
+      }
     }
     return config;
   },
