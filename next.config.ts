@@ -1,3 +1,4 @@
+import path from "path";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
@@ -27,6 +28,17 @@ const nextConfig: NextConfig = {
     "172.30.*.*",
     "172.31.*.*",
   ],
+  webpack: (config, { nextRuntime }) => {
+    // Edge Runtime builds: replace Node.js-only packages with empty stubs.
+    // postgres and drizzle-orm use net/tls which don't exist in Edge.
+    if (nextRuntime === "edge") {
+      const stub = path.join(__dirname, "src/lib/db/empty-stub.cjs");
+      config.resolve.alias["postgres"] = stub;
+      config.resolve.alias["drizzle-orm"] = stub;
+      config.resolve.alias["drizzle-orm/postgres-js"] = stub;
+    }
+    return config;
+  },
 };
 
 export default nextConfig;
