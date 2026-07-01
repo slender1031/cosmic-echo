@@ -29,37 +29,48 @@ const nextConfig: NextConfig = {
     "172.31.*.*",
   ],
   webpack: (config, { nextRuntime, isServer }) => {
-    // Always log for debugging (check Cloudflare build logs)
     console.log(
       `[next.config.ts webpack] nextRuntime=${nextRuntime}, isServer=${isServer}`
     );
 
-    // Edge Runtime OR client builds: replace Node.js-only packages with empty stubs.
-    // postgres and drizzle-orm/pg-core use net/tls which don't exist in Edge.
-    // We apply this for ALL builds (not just edge) to be safe, since demo mode
-    // never actually calls these packages at runtime.
-    const stub = path.join(__dirname, "src/lib/db/empty-stub.cjs");
-    const pgStubPaths = [
-      "postgres",
-      "drizzle-orm",
-      "drizzle-orm/postgres-js",
-      "drizzle-orm/pg-core",
-      "drizzle-orm/mysql-core",
-      "drizzle-orm/sqlite-core",
-      "drizzle-orm/better-sqlite3",
-      "drizzle-orm/bun-sqlite",
-      "drizzle-orm/neon-serverless",
-      "drizzle-orm/singlestore",
-      "drizzle-orm/vercel-postgres",
-      "drizzle-orm/xata",
-      "drizzle-orm/lib",
-      "drizzle-orm/crosspostgres",
-      "drizzle-orm/pg-protocol",
-      "drizzle-orm/pg-vector",
-    ];
-    for (const pkg of pgStubPaths) {
-      config.resolve.alias[pkg] = stub;
-    }
+    const webpack = require("webpack");
+
+    // Stub for drizzle-orm/pg-core — replaces Node.js-only pg-core with a mock
+    // that exports fake pgTable/text/varchar/etc. so schema files compile in Edge.
+    const pgCoreStub = path.join(__dirname, "src/lib/db/pg-core-stub.ts");
+
+    // NormalModuleReplacementPlugin is the most forceful way to redirect imports.
+    // It runs during module resolution and replaces the matched module with our stub.
+    config.plugins.push(
+      new webpack.NormalModuleReplacementPlugin(
+        /drizzle-orm[/\\]pg-core$/,
+        pgCoreStub
+      )
+    );
+
+    // Also stub the postgres package (Node.js-only, uses net/tls)
+    const emptyStub = path.join(__dirname, "src/lib/db/empty-stub.cjs");
+    config.plugins.push(
+      new webpack.NormalModuleReplacementPlugin(
+        /^postgres$/,
+        emptyStub
+      )
+    );
+
+    // Also stub drizzle-orm/postgres-js (used by client.ts via lazy require)
+    // and drizzle-orm/node-postgres — both depend on pg-core transitively
+    config.plugins.push(
+      new webpack.NormalModuleReplacementPlugin(
+        /drizzle-orm[/\\](postgres-js|node-postgres|better-sqlite3|bun-sqlite|neon-serverless)$/,
+        emptyStub
+      )
+    );
+
+    // Keep alias as a secondary safety net
+    config.resolve.alias["drizzle-orm/pg-core"] = pgCoreStub;
+    config.resolve.alias["postgres"] = emptyStub;
+    config.resolve.alias["drizzle-orm"] = emptyStub;
+    config.resolve.alias["drizzle-orm/postgres-js"] = emptyStub;
 
     return config;
   },
