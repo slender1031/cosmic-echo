@@ -6,17 +6,6 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
 
-  // Bundle optimization: tree-shake large libraries (framer-motion, i18next, etc.)
-  // so only the actually-used exports are included in client bundles.
-  optimizePackageImports: [
-    "framer-motion",
-    "i18next",
-    "react-i18next",
-    "lucide-react",
-    "@base-ui/react",
-    "sonner",
-  ],
-
   // Allowed dev origins for local development over Wi-Fi
   allowedDevOrigins: [
     "localhost",

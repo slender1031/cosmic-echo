@@ -2,7 +2,7 @@ import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
-const MorningScreen = dynamic(() => import("@/components/screens/MorningScreen")), {
+const MorningScreen = dynamic(() => import("@/components/screens/MorningScreen"), {
   loading: () => <LoadingSpinner />,
   ssr: false,
 });
