@@ -1,36 +1,70 @@
 // Edge Runtime stub for drizzle-orm/pg-core
-// This file replaces the real pg-core when building for Cloudflare Pages (Edge Runtime).
-// All functions return minimal mock values that allow the schema files to compile.
-// At runtime in demo mode, these schemas are never actually used.
+// Replaces Node.js-only pg-core with mock objects that support chaining,
+// so schema files compile and "run" (in demo mode they're never actually queried).
 
-function col(name: string, opts?: unknown) {
-  return { name, opts, _col: true };
+/** Create a chainable column builder mock */
+function col(name: string) {
+  const c: any = { _col: true, name };
+  // All chainable modifiers just return the same object
+  c.primaryKey = () => c;
+  c.notNull = () => c;
+  c.default = (val: unknown) => c;
+  c.defaultNow = () => c;
+  c.unique = () => c;
+  c.references = (...args: unknown[]) => c;
+  c.array = () => c;
+  c.$type = () => c;
+  c.generated = (...args: unknown[]) => c;
+  return c;
 }
 
-function pgTable(name: string, def: unknown, indexes?: unknown) {
-  return { _table: name, _def: def, _indexes: indexes };
+// Column definition functions
+export function text(name: string, opts?: unknown) { return col(name); }
+export function varchar(name: string, opts?: unknown) { return col(name); }
+export function timestamp(name: string, opts?: unknown) { return col(name); }
+export function integer(name: string, opts?: unknown) { return col(name); }
+export function boolean(name: string, opts?: unknown) { return col(name); }
+export function json(name: string, opts?: unknown) { return col(name); }
+export function jsonb(name: string, opts?: unknown) { return col(name); }
+export function date(name: string, opts?: unknown) { return col(name); }
+export function real(name: string, opts?: unknown) { return col(name); }
+export function pgEnum(name: string, values: readonly string[]) {
+  // Returns a function that creates a column def
+  const fn = (colName: string, opts?: unknown) => col(colName);
+  return fn;
 }
 
-export { pgTable };
-export function text(name: string, opts?: unknown) { return col(name, opts); }
-export function varchar(name: string, opts?: unknown) { return col(name, opts); }
-export function timestamp(name: string, opts?: unknown) { return col(name, opts); }
-export function integer(name: string, opts?: unknown) { return col(name, opts); }
-export function boolean(name: string, opts?: unknown) { return col(name, opts); }
-export function json(name: string, opts?: unknown) { return col(name, opts); }
-export function primaryKey(...cols: unknown[]) { return { _pk: cols }; }
+// pgTable: returns a mock table object
+export function pgTable(name: string, columns: unknown, extra?: unknown) {
+  const t: any = { _table: name };
+  // Make all column names accessible as properties (for index/foreignKey builders)
+  if (columns && typeof columns === "object") {
+    for (const [key, val] of Object.entries(columns as any)) {
+      t[key] = val;
+    }
+  }
+  return t;
+}
+
+// Index helpers
 export function index(name: string) {
-  return { on: (...cols: unknown[]) => ({ _idx: name, _cols: cols }) };
+  return { on: (...cols: unknown[]) => ({ _idx: name }) };
 }
 export function uniqueIndex(name: string) {
-  return { on: (...cols: unknown[]) => ({ _uidx: name, _cols: cols }) };
+  return { on: (...cols: unknown[]) => ({ _uidx: name }) };
 }
+
+// primaryKey as a standalone function (for composite PKs)
+export function primaryKey(...cols: unknown[]) {
+  return { _pk: cols };
+}
+
+// foreignKey
 export function foreignKey(...cols: unknown[]) {
   return { references: (...refs: unknown[]) => ({ _fk: cols, _refs: refs }) };
 }
+
+// check constraint
 export function check(name: string, fn: unknown) {
-  return { name, fn, _check: true };
-}
-export function pgEnum(name: string, values: readonly string[]) {
-  return { _enum: name, values };
+  return { name, fn };
 }
