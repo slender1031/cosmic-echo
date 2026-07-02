@@ -188,6 +188,7 @@ export function ShareCardScreen() {
       finalCanvas.width = w;
       finalCanvas.height = h;
       const ctx = finalCanvas.getContext("2d");
+      if (!ctx) throw new Error("Failed to get canvas context");
 
       // 圆角矩形裁剪路径
       ctx.beginPath();
