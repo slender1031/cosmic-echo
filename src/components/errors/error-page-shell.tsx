@@ -18,11 +18,11 @@ export function ErrorPageShell({ children, className }: ErrorPageShellProps) {
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,oklch(0.92_0.02_250/0.45),transparent)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(220,220,245,0.45),transparent)]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.35] [background-image:linear-gradient(to_right,oklch(0.85_0_0/0.12)_1px,transparent_1px),linear-gradient(to_bottom,oklch(0.85_0_0/0.12)_1px,transparent_1px)] [background-size:3rem_3rem]"
+        className="pointer-events-none absolute inset-0 opacity-[0.35] [background-image:linear-gradient(to_right,rgba(200,200,220,0.12)_1px,transparent_1px),linear-gradient(to_bottom,rgba(200,200,220,0.12)_1px,transparent_1px)] [background-size:3rem_3rem]"
       />
 
       <header className="absolute right-4 top-4 z-10 flex items-center gap-2">

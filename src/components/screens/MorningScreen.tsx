@@ -54,9 +54,21 @@ function getMoonPhase(lunarDay: number) {
   return { name: "残月", emoji: "🌘" };
 }
 
-function getResultCardWidth(count: number) {
-  if (count <= 1) return 100;
-  return Math.max(12, (100 - (count - 1) * 3.2) / count);
+function getCardRows(count: number): number[] {
+  if (count <= 4) return [count];
+  if (count === 5) return [3, 2];
+  if (count === 6) return [3, 3];
+  if (count === 7) return [4, 3];
+  return [count];
+}
+
+function getCardSizeStyle(totalCount: number): React.CSSProperties {
+  // 固定像素宽度，所有牌大小一致
+  if (totalCount <= 2) return { width: 130 };
+  if (totalCount === 3) return { width: 100 };
+  if (totalCount === 4) return { width: 72 };
+  if (totalCount === 5 || totalCount === 6) return { width: 72 };
+  return { width: 64 }; // 7+ 张更小，保证边距
 }
 
 function getResultContainerClass(count: number) {
@@ -535,24 +547,30 @@ export function MorningScreen() {
                 <div className="relative w-full max-w-sm">
                   <div className="absolute inset-0 mx-auto h-[320px] w-[320px] -translate-y-4 rounded-full"
                     style={{ background: "radial-gradient(circle, rgba(126,99,201,0.10) 0%, rgba(126,99,201,0.05) 42%, transparent 74%)", filter: "blur(22px)" }} />
-                  <div className={`mx-auto flex w-full items-center justify-center ${getResultContainerClass(cards.length)}`}>
-                    <div className="flex items-center justify-center gap-[10px]">
-                      {cards.map((item, index) => (
-                        <motion.div key={`${item.info.cardId}-${index}`} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.12 }} className="flex shrink-0 flex-col items-center" style={{ width: `${getResultCardWidth(cards.length)}%` }}>
-                          <div className="overflow-hidden rounded-[22px]" style={{ boxShadow: "0 18px 42px rgba(46,26,71,0.18)" }}>
-                            <CardFront card={item.card} orientation={item.info.cardOrientation as "upright" | "reversed"} cardSystem={cardSystem} />
-                          </div>
-                          <div className="mt-3 flex items-center justify-center gap-1.5">
-                            <span className="h-2 w-2 rounded-full" style={{ backgroundColor: getCardSuitDotColor(item.card.id, cardSystem) }} />
-                            <span className="text-[11px] text-[#5c5a64]">{item.card.nameZh}{cardSystem !== "lenormand" ? ` · ${t(`morning.orientation.${item.info.cardOrientation}`)}` : ""}</span>
-                          </div>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </div>
+                  <div className={`mx-auto flex w-full flex-col items-center gap-3 ${getResultContainerClass(cards.length)}`}>
+                    {getCardRows(cards.length).map((rowCount, rowIndex) => {
+                      const rows = getCardRows(cards.length);
+                      const startIndex = rows.slice(0, rowIndex).reduce((a, b) => a + b, 0);
+                      const rowCards = cards.slice(startIndex, startIndex + rowCount);
+                      return (
+                        <div key={rowIndex} className="flex items-center justify-center gap-[10px]">
+                          {rowCards.map((item, idx) => {
+                            const globalIndex = startIndex + idx;
+                            return (
+                              <motion.div key={`${item.info.cardId}-${globalIndex}`} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: globalIndex * 0.12 }} className="flex shrink-0 flex-col items-center" style={getCardSizeStyle(cards.length)}>
+                                <div className="overflow-hidden rounded-[18px]" style={{ boxShadow: "0 18px 42px rgba(46,26,71,0.18)" }}>
+                                  <CardFront card={item.card} orientation={item.info.cardOrientation as "upright" | "reversed"} cardSystem={cardSystem} />
+                                </div>
+                                {/* 卡牌名称标签已移除 */}
+                              </motion.div>
+                            );
+                          })}
+                        </div>
+                      );
+                    })}
                 </div>
+              </div>
 
-                {/* generate / generated area */}
                 {(phase === "drawn" || phase === "generating") && (
                   <div className="relative z-20 w-full space-y-3">
                     <motion.button whileTap={phase === "drawn" ? { scale: 0.97 } : undefined} onClick={phase === "drawn" ? handleGenerateTheme : undefined}
@@ -566,15 +584,15 @@ export function MorningScreen() {
                 {/* ready: show lesson + question */}
                 {phase === "ready" && entry?.morningTheme && (
                   <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="w-full space-y-5">
-                    <div className="flex gap-3.5">
+                    <div className="flex gap-3.5 items-start">
                       {/* left icon column */}
-                      <div className="flex flex-col items-center gap-3 pt-1">
-                        <div className="text-[#7e63c9]">
+                      <div className="flex flex-col items-center gap-3 shrink-0">
+                        <div className="text-[#7e63c9] pt-1">
                           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                             <circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
                           </svg>
                         </div>
-                        <div className="h-14 w-px bg-[#7e63c9]/15" />
+                        <div className="h-8 w-px bg-[#7e63c9]/15" />
                         <div className="text-[#7e63c9]">
                           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
@@ -582,12 +600,12 @@ export function MorningScreen() {
                         </div>
                       </div>
                       {/* right content */}
-                      <div className="flex-1">
+                      <div className="flex-1 min-w-0">
                         <div>
                           <p className="text-[11px] font-bold uppercase tracking-widest text-[#7e63c9]">{t("morning.lesson")}</p>
                           <h3 className="font-heading mt-1 text-[18px] font-bold leading-snug text-[#2d2a34]">{entry.morningTheme}</h3>
                         </div>
-                        <div className="mt-2">
+                        <div className="mt-4">
                           <p className="text-[11px] font-bold uppercase tracking-widest text-[#7e63c9]">{t("morning.question")}</p>
                           <p className="font-heading mt-1 text-[15px] font-bold leading-snug text-[#2d2a34]">{entry.morningQuestion}</p>
                           {entry.morningQuestionDescription && (

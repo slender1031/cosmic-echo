@@ -7,6 +7,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { request } from "@/lib/api/request";
 import { useDemo } from "@/components/demo/demo-provider";
+import { CardFront } from "@/components/tarot/tarot-card-display";
+import { getCardById } from "@/lib/tarot-data";
+import { getLenormandCardById } from "@/lib/lenormand-data";
 
 interface JournalEntry {
   id: string;
@@ -251,6 +254,12 @@ export function EveningScreen() {
     }
   })();
 
+  const card = (() => {
+    if (!entry?.cardId) return null;
+    return getCardById(entry.cardId) ?? getLenormandCardById(entry.cardId) ?? null;
+  })();
+  const cardOrientation = (entry?.cardOrientation ?? "upright") as "upright" | "reversed";
+
   return (
     <div className="flex-1 overflow-y-auto">
       <div className="absolute top-[-100px] left-[-100px] w-[300px] h-[300px] rounded-full pointer-events-none -z-10 opacity-10" style={{ background: "radial-gradient(#f8f6fc)", filter: "blur(80px)" }} />
@@ -286,7 +295,7 @@ export function EveningScreen() {
         )}
       </header>
 
-      <div className="mx-auto max-w-lg px-7 pt-4 pb-18 space-y-5">
+      <div className="mx-auto max-w-lg px-7 pt-1 pb-18 space-y-5">
         {entry?.morningTheme && (
           <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className="relative w-full rounded-[26px] border bg-white/75 px-4 py-3 text-left shadow-[0_12px_30px_rgba(80,42,18,0.06)] backdrop-blur-sm" style={{ borderColor: "#dbd5e8" }}>
             <div className="flex items-start gap-3">
@@ -295,7 +304,7 @@ export function EveningScreen() {
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-[10px] uppercase font-bold tracking-widest mb-1" style={{ color: "#9794a2" }}>{t("morning.lesson")}</p>
-                <p className="font-heading text-sm font-semibold leading-snug pr-16" style={{ color: "#2d2a34" }}>{entry.morningTheme}</p>
+                <p className="font-heading text-sm font-semibold leading-snug">{entry.morningTheme}</p>
               </div>
             </div>
             <p className="absolute right-3 top-3 text-[10px] font-medium" style={{ color: "#9794a2" }}>{selectedDate}</p>
@@ -320,10 +329,10 @@ export function EveningScreen() {
                 <div>
                   <p className="text-xs font-semibold mb-2" style={{ color: "#9794a2" }}>{t("evening.subtitle")}</p>
                   <textarea value={journalText} onChange={(e) => setJournalText(e.target.value)} placeholder={t("evening.placeholder")} rows={10} className="w-full resize-none rounded-2xl border px-4 py-4 text-sm leading-relaxed outline-none focus:ring-1 transition-shadow" style={{ backgroundColor: "#fefdfe", borderColor: "#dbd5e8", color: "#2d2a34", fontSize: "16px", lineHeight: "1.7" }} />
-                  <p className="text-xs mt-1 text-right" style={{ color: "#9794a2" }}>{journalText.length} chars</p>
+                  <p className="text-xs mt-1 text-right" style={{ color: "#9794a2" }}>{journalText.length} 字</p>
                 </div>
 
-                <motion.button whileTap={{ scale: 0.97 }} onClick={handleSubmit} disabled={journalText.trim().length < 10 || phase === "submitting"} className="w-full py-4 rounded-[20px] text-white text-sm font-bold tracking-widest flex items-center justify-center gap-2 shadow-lg transition-all" style={{ background: journalText.trim().length < 10 ? "#c0b8a8" : "linear-gradient(135deg, #9b7dd4, #7e63c9)" }}>
+                <motion.button whileTap={{ scale: 0.97 }} onClick={handleSubmit} disabled={!journalText.trim() || phase === "submitting"} className="w-full py-4 rounded-[20px] text-white text-sm font-bold tracking-widest flex items-center justify-center gap-2 shadow-lg transition-all" style={{ background: !journalText.trim() ? "#c0b8a8" : "linear-gradient(135deg, #9b7dd4, #7e63c9)" }}>
                   {phase === "submitting" ? t("evening.submitting") : t("evening.submit")}
                 </motion.button>
 
@@ -342,7 +351,7 @@ export function EveningScreen() {
               {entry.eveningEcho && (
                 <div className="border-l-[3px] pl-4 mb-3" style={{ borderLeftColor: "#7e63c9" }}>
                   <span className="text-[9px] font-bold tracking-widest uppercase block mb-1" style={{ color: "#7e63c9" }}>{t("evening.echo")}</span>
-                  <p className="font-heading text-lg font-bold leading-relaxed" style={{ color: "#2d2a34" }}>&ldquo;{entry.eveningEcho}&rdquo;</p>
+                  <p className="font-heading text-base font-bold leading-relaxed" style={{ color: "#2d2a34" }}>&ldquo;{entry.eveningEcho}&rdquo;</p>
                 </div>
               )}
 

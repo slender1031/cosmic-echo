@@ -28,23 +28,34 @@ interface JournalEntry {
 function DividerGlyph() {
   return (
     <div className="flex items-center justify-center gap-2 text-[#D9B86A]">
-      <span className="h-px w-14 bg-[#D9B86A]/75" />
+      <span className="h-px w-14" style={{ background: "rgba(217,184,106,0.75)" }} />
       <span className="text-[10px]">✦</span>
       <span className="text-[11px]">○</span>
       <span className="text-[10px]">✦</span>
-      <span className="h-px w-14 bg-[#D9B86A]/75" />
+      <span className="h-px w-14" style={{ background: "rgba(217,184,106,0.75)" }} />
     </div>
   );
 }
 
 function CornerStar({ className }: { className: string }) {
-  return <span className={`absolute text-[11px] text-[#D9B86A]/80 ${className}`}>✦</span>;
+  return <span className={`absolute text-[11px] ${className}`} style={{ color: "rgba(217,184,106,0.8)" }}>✦</span>;
 }
 
-function getShareCardWidth(count: number) {
-  if (count <= 1) return "w-[140px]";
-  if (count <= 3) return "w-[96px]";
-  return "w-[78px]";
+function getCardRows(count: number): number[] {
+  if (count <= 4) return [count];
+  if (count === 5) return [3, 2];
+  if (count === 6) return [3, 3];
+  if (count === 7) return [4, 3];
+  return [count];
+}
+
+function getShareCardStyle(totalCount: number): React.CSSProperties {
+  // 固定像素宽度，所有牌大小一致
+  if (totalCount <= 2) return { width: 130 };
+  if (totalCount === 3) return { width: 100 };
+  if (totalCount === 4) return { width: 72 };
+  if (totalCount === 5 || totalCount === 6) return { width: 72 };
+  return { width: 64 }; // 7+ 张更小，保证边距
 }
 
 export function ShareCardScreen() {
@@ -143,18 +154,63 @@ export function ShareCardScreen() {
     setDownloading(true);
     const restoreTheme = applyExportTheme();
     try {
-      const html2canvas = (await import("html2canvas")).default;
-      const canvas = await html2canvas(posterRef.current, {
-        scale: 2,
-        useCORS: true,
+      // 使用 html-to-image（避免 html2canvas 的 oklab 解析错误）
+      const { toCanvas } = await import("html-to-image");
+      const el = posterRef.current;
+
+      // 保存原始样式
+      const origStyle = {
+        height: el.style.height,
+        minHeight: el.style.minHeight,
+        width: el.style.width,
+      };
+      // 截图时强制自适应内容大小
+      el.style.height = "auto";
+      el.style.minHeight = "auto";
+
+      // 先生成原始 canvas
+      const rawCanvas = await toCanvas(el, {
+        pixelRatio: 2,
         backgroundColor: "#f6ead1",
-        logging: false,
+        cacheBust: true,
       });
+
+      // 恢复原始样式
+      el.style.height = origStyle.height;
+      el.style.minHeight = origStyle.minHeight;
+      el.style.width = origStyle.width;
+
+      // 创建最终 canvas：带圆角裁剪 (18px * 2 = 36px at pixelRatio=2)
+      const w = rawCanvas.width;
+      const h = rawCanvas.height;
+      const r = 36;
+      const finalCanvas = document.createElement("canvas");
+      finalCanvas.width = w;
+      finalCanvas.height = h;
+      const ctx = finalCanvas.getContext("2d");
+
+      // 圆角矩形裁剪路径
+      ctx.beginPath();
+      ctx.moveTo(r, 0);
+      ctx.lineTo(w - r, 0);
+      ctx.quadraticCurveTo(w, 0, w, r);
+      ctx.lineTo(w, h - r);
+      ctx.quadraticCurveTo(w, h, w - r, h);
+      ctx.lineTo(r, h);
+      ctx.quadraticCurveTo(0, h, 0, h - r);
+      ctx.lineTo(0, r);
+      ctx.quadraticCurveTo(0, 0, r, 0);
+      ctx.closePath();
+      ctx.clip();
+
+      // 绘制原始图像到裁剪后的画布
+      ctx.drawImage(rawCanvas, 0, 0);
+
+      // 导出为 blob 下载
       const blob = await new Promise<Blob | null>((resolve) => {
-        canvas.toBlob((file) => resolve(file), "image/png");
+        finalCanvas.toBlob((file) => resolve(file), "image/png");
       });
       if (!blob) throw new Error("Failed to create image blob");
-
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.download = `cosmic-echo-${entry?.date ?? "today"}.png`;
@@ -264,9 +320,8 @@ export function ShareCardScreen() {
           ref={posterRef}
           initial={{ opacity: 0, y: 16, scale: 0.96 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          className="relative w-full overflow-hidden rounded-[30px] border px-6 py-7"
+          className="relative w-full overflow-hidden rounded-[30px] border px-6 py-5"
           style={{
-            minHeight: "620px",
             background: "linear-gradient(180deg, #fbf4e3 0%, #f4e3bb 100%)",
             borderColor: "#d5b97d",
             boxShadow: "0 18px 40px rgba(102, 74, 30, 0.16), inset 0 0 0 1px rgba(255,255,255,0.35)",
@@ -283,71 +338,62 @@ export function ShareCardScreen() {
               <p className="font-heading text-xl font-semibold text-[#6a4a28]">{t("app.name")}</p>
             </div>
 
+            <div className="mt-4 w-full">
+              <DividerGlyph />
+            </div>
+
+            <div className="mt-4 flex items-center justify-center gap-2 text-[12px] text-[#7d623f]">
+              <span>{entry.date}</span>
+            </div>
+
+            <div className="mt-5 flex flex-col items-center gap-3">
+              {getCardRows(shareCards.length).map((rowCount, rowIndex) => {
+                const rows = getCardRows(shareCards.length);
+                const startIndex = rows.slice(0, rowIndex).reduce((a, b) => a + b, 0);
+                const rowCards = shareCards.slice(startIndex, startIndex + rowCount);
+                return (
+                  <div key={rowIndex} className="flex items-center justify-center gap-3">
+                    {rowCards.map((shareCard, idx) => {
+                      const globalIndex = startIndex + idx;
+                      const cardData = getCardById(shareCard.cardId);
+                      return (
+                        <div
+                          key={`${shareCard.cardId}-${globalIndex}`}
+                          className="relative overflow-hidden rounded-[18px] border bg-[#f6ead1]"
+                          style={{
+                            ...getShareCardStyle(shareCards.length),
+                            aspectRatio: "2/3.14",
+                            borderColor: "#cda45b",
+                            boxShadow: "0 12px 24px rgba(84, 57, 20, 0.20)",
+                            transform: "none",
+                          }}
+                        >
+                          {cardData ? (
+                            <CardFront card={cardData} orientation={shareCard.cardOrientation as "upright" | "reversed"} cardSystem={entry.cardSystem as "tarot" | "lenormand" | undefined} />
+                          ) : (
+                            <div className="flex h-full w-full items-center justify-center px-4 text-center font-heading text-lg text-[#6a4a28]">
+                              Tarot
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })}
+            </div>
+            
             <div className="mt-5 w-full">
               <DividerGlyph />
             </div>
 
-            <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-[12px] text-[#7d623f]">
-              <span>{entry.date}</span>
-              <span className="text-[#caa25c]">•</span>
-              {headerDetail && (
-                <span
-                  className="rounded-full border px-3 py-1 text-[11px]"
-                  style={{ borderColor: "#d5b97d", color: "#9f7a3d", backgroundColor: "rgba(251,245,231,0.7)" }}
-                >
-                  {headerDetail}
-                </span>
-              )}
-            </div>
-
-            <div className="mt-6 flex flex-col items-center">
-              <div className="flex items-center justify-center gap-3">
-                {shareCards.map((shareCard, index) => {
-                  const cardData = getCardById(shareCard.cardId);
-
-                  return (
-                    <div
-                      key={`${shareCard.cardId}-${index}`}
-                      className={`relative ${getShareCardWidth(shareCards.length)} overflow-hidden rounded-[22px] border bg-[#f6ead1]`}
-                      style={{
-                        aspectRatio: "2/3.14",
-                        borderColor: "#cda45b",
-                        boxShadow: "0 18px 30px rgba(84, 57, 20, 0.22)",
-                        transform: "none",
-                      }}
-                    >
-                      {cardData ? (
-                        <CardFront card={cardData} orientation={shareCard.cardOrientation as "upright" | "reversed"} cardSystem={entry.cardSystem as "tarot" | "lenormand" | undefined} />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center px-4 text-center font-heading text-lg text-[#6a4a28]">
-                          Tarot
-                        </div>
-                      )}
-                      <div
-                        className="absolute inset-x-0 bottom-0 px-3 pb-3 pt-8"
-                        style={{ background: "linear-gradient(to top, rgba(52,27,8,0.78) 0%, rgba(52,27,8,0.08) 100%)" }}
-                      >
-                        <p className="font-heading text-base font-semibold text-[#f5df8d]">
-                          {cardData?.nameZh ?? ""}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="mt-6 w-full">
-              <DividerGlyph />
-            </div>
-
-            <div className="mt-7 text-center">
+            <div className="mt-5 text-center">
               <p className="text-[11px] text-[#9f7a3d]">{t("morning.lesson")}</p>
               <p className="mt-1 text-[13px] text-[#6a4a28]">{entry.morningTheme}</p>
               {entry.eveningEcho && <p className="mt-2 text-[12px] italic text-[#8a6a3a]">{entry.eveningEcho}</p>}
             </div>
 
-            <div className="mt-auto pt-5 text-[#d9b86a]">
+            <div className="mt-4 text-[#d9b86a]">
               <div className="flex items-center justify-center gap-4 text-[12px]">
                 <span>☽</span>
                 <span>✦</span>

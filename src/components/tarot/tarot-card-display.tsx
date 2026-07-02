@@ -431,7 +431,7 @@ export function CardFront({ card, orientation, cardSystem }: { card: AnyCard; or
 
   return (
     <div
-      className="relative w-full overflow-hidden rounded-[28px]"
+      className="relative w-full overflow-hidden rounded-[18px]"
       style={{
         aspectRatio: "2/3.4",
         transform: orientation === "reversed" && effectiveCardSystem !== "lenormand" ? "rotate(180deg)" : undefined,
@@ -471,19 +471,19 @@ export function CardFront({ card, orientation, cardSystem }: { card: AnyCard; or
       )}
 
       <div
-        className="absolute bottom-0 left-0 right-0 px-4 py-3"
+        className="absolute bottom-0 left-0 right-0 px-2 py-3"
         style={{
           background: "linear-gradient(to top, rgba(20,10,0,0.88) 0%, rgba(20,10,0,0.45) 65%, transparent 100%)",
         }}
       >
         <div className="flex items-end justify-between">
           <div>
-            <p className="font-heading text-base font-bold leading-tight text-white drop-shadow-sm">{card.nameZh}</p>
-            <p className="mt-0.5 text-[10px] tracking-wider text-white/55">{card.name}</p>
+            <p className="font-heading text-sm font-bold leading-tight text-white drop-shadow-sm">{card.nameZh}</p>
+            <p className="mt-0.5 text-[9px] tracking-wider text-white/55">{card.name}</p>
           </div>
         </div>
       </div>
-      <div className="pointer-events-none absolute inset-0 rounded-[28px] border border-white/10" />
+      <div className="pointer-events-none absolute inset-0 rounded-[18px] border border-white/10" />
     </div>
   );
 }
